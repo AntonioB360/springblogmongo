@@ -6,6 +6,8 @@ import com.luke.springblog.repository.ArtigoRepository;
 import com.luke.springblog.repository.AutorRepository;
 import com.luke.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -101,6 +103,42 @@ public class ArtigoServiceImpl implements ArtigoService {
 
     }
 
+    @Override
+    public List<Artigo> findByStatusAndDataGreaterThan(Integer status, LocalDateTime data) {
+      return  this.artigoRepository.
+              findByStatusAndDataGreaterThan(status,data);
+    }
+
+    @Override
+    public List<Artigo> obterArtigoPorDataHora(LocalDateTime de, LocalDateTime ate) {
+        return artigoRepository.obterArtigoPorDataHora(de, ate);
+    }
+
+    @Override
+    public List<Artigo> encontrarArtigosComplexos(Integer status, LocalDateTime data, String titulo) {
+
+        Criteria criteria = new Criteria();
+
+        criteria.and("data").lte(data);
+        if (status != null) {
+            criteria.and("status").is(status);
+        }
+
+        if (titulo != null && !titulo.isEmpty() ) {
+            criteria.and("titulo").regex(titulo,"i");
+        }
+
+        Query query = new Query(criteria);
+
+        return mongoTemplate.find(query, Artigo.class);
+
+
+    }
+
+    @Override
+    public Page<Artigo> listaArtigos(Pageable pageable) {
+        return artigoRepository.findAll(pageable);
+    }
 
 
 }

@@ -1,9 +1,11 @@
 package com.luke.springblog.controller;
 
 import com.luke.springblog.model.Artigo;
-import com.luke.springblog.repository.ArtigoRepository;
 import com.luke.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -68,8 +70,39 @@ public class ArtigoController {
     public void deleteById(@PathVariable String id) {
 
         this.artigoService.deleteById(id);
+    }
 
+    @GetMapping("/status-maiordata")
+    public List<Artigo> findByStatusAndDataGreaterThen(
+            @RequestParam("status") Integer status,
+            @RequestParam("data") LocalDateTime data) {
 
+       return this.artigoService.findByStatusAndDataGreaterThan(status, data);
+    }
+
+    @GetMapping("/periodo")
+    public List<Artigo> obterArtigoPorDataHora(
+            @RequestParam("de") LocalDateTime de,
+            @RequestParam("ate") LocalDateTime ate) {
+
+       return this.artigoService.obterArtigoPorDataHora(de, ate);
+    }
+
+    @GetMapping("/artigo-complexo")
+    public List<Artigo> encontraArtigosComplexos(
+            @RequestParam("status") Integer status,
+            @RequestParam("data")   LocalDateTime data,
+            @RequestParam("titulo") String titulo) {
+
+       return this.artigoService.encontrarArtigosComplexos(status, data, titulo);
+    }
+
+    @GetMapping("/pagina-artigos")
+    public ResponseEntity<Page<Artigo>> obterArtigosPaginados(Pageable pageable){
+
+        Page<Artigo> artigos = this.artigoService.listaArtigos(pageable);
+
+        return ResponseEntity.ok(artigos);
     }
 
 
