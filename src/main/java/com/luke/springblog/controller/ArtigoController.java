@@ -1,13 +1,18 @@
 package com.luke.springblog.controller;
 
 import com.luke.springblog.model.Artigo;
+import com.luke.springblog.model.ArtigoStatusCount;
+import com.luke.springblog.model.AutorTotalArtigo;
 import com.luke.springblog.service.ArtigoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,6 +22,14 @@ public class ArtigoController {
 
     @Autowired
     private ArtigoService artigoService;
+
+    @ExceptionHandler(OptimisticLockingFailureException.class)
+    public ResponseEntity<String> handleOptimisticLockingFailureException
+                                            (OptimisticLockingFailureException ex){
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Erro de concorrência: " +
+                "o Artigo foi atualizado por outro usuário. Por favor, tente novamente!");
+    }
 
     @GetMapping
     public List<Artigo> obterTodos(){
@@ -104,6 +117,31 @@ public class ArtigoController {
 
         return ResponseEntity.ok(artigos);
     }
+
+    @GetMapping("/status-ordenado")
+    public List<Artigo> findByStatusOrderByTituloAsc(@RequestParam("status") Integer status) {
+        return this.artigoService.findByStatusOrderByTituloAsc(status);
+    }
+
+    @GetMapping("/buscatexto")
+    public List<Artigo> findByTexto(@RequestParam("texto") String searchTerm){
+
+        return this.artigoService.findByTexto(searchTerm);
+    }
+
+    @GetMapping("/contar-artigo")
+    public List<ArtigoStatusCount> contarArtigosPorStatus() {
+        return this.artigoService.contarArtigosPorStatus();
+    }
+
+
+    @GetMapping("/total-artigo-autor-periodo")
+    public List<AutorTotalArtigo> calcularTotalArtigosPorAutor(@RequestParam("dataInicio") LocalDate dataInicio,
+                                                               @RequestParam("dataFim") LocalDate dataFim) {
+
+        return this.artigoService.calcularTotalArtigosPorAutor(dataInicio,dataFim);
+    }
+
 
 
 

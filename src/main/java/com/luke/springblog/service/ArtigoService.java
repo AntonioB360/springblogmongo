@@ -1,9 +1,12 @@
 package com.luke.springblog.service;
 
 import com.luke.springblog.model.Artigo;
+import com.luke.springblog.model.ArtigoStatusCount;
+import com.luke.springblog.model.AutorTotalArtigo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,5 +35,16 @@ public interface ArtigoService {
     public List<Artigo> encontrarArtigosComplexos (Integer status, LocalDateTime data, String titulo);
 
     public Page<Artigo> listaArtigos(Pageable pageable);
+
+    public List<Artigo> findByStatusOrderByTituloAsc(Integer status);
+
+    public List<Artigo> findByTexto(String searchTerm);
+
+    public List<ArtigoStatusCount> contarArtigosPorStatus();
+
+    public List<AutorTotalArtigo> calcularTotalArtigosPorAutor(LocalDate dataInicio,
+                                                               LocalDate dataFim);
+
+
 
 }

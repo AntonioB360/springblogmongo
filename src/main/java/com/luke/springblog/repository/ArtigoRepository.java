@@ -21,4 +21,8 @@ public interface ArtigoRepository extends MongoRepository<Artigo,String> {
 
     public Page<Artigo> findAll(Pageable pageable);
 
+    public List<Artigo> findByStatusOrderByTituloAsc(Integer status);
+
+
+
 }
