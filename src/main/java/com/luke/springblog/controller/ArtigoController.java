@@ -1,9 +1,11 @@
 package com.luke.springblog.controller;
 
+import com.luke.springblog.dto.ArtigoComAutorRequest;
 import com.luke.springblog.model.Artigo;
-import com.luke.springblog.model.ArtigoStatusCount;
-import com.luke.springblog.model.AutorTotalArtigo;
+import com.luke.springblog.dto.ArtigoStatusCount;
+import com.luke.springblog.dto.AutorTotalArtigo;
 import com.luke.springblog.service.ArtigoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
@@ -43,11 +45,38 @@ public class ArtigoController {
         return this.artigoService.obterPorCodigo(codigo);
     }
 
-    @PostMapping()
+   /* @PostMapping()
     public Artigo criar(@RequestBody Artigo artigo){
 
         return this.artigoService.criar(artigo);
+    }*/
+
+    /*@PostMapping()
+    public ResponseEntity<?> criar(@RequestBody Artigo artigo){
+
+        return this.artigoService.criar(artigo);
+    }*/
+
+    @PostMapping
+    public ResponseEntity<?> criarArtigoComAutor(@RequestBody ArtigoComAutorRequest request){
+
+        var artigo = request.getArtigo();
+        var autor = request.getAutor();
+
+        return this.artigoService.criarArtigoComAutor(artigo,autor);
+
     }
+
+
+
+    @PutMapping("/atualizar-artigo/{id}")
+    public void atualizarArtigo(
+            @PathVariable("id") String id,
+            @Valid @RequestBody Artigo artigo){
+
+        this.artigoService.atualizarArtigo(id,artigo);
+    }
+
 
     @GetMapping("/maiordata")
     public List<Artigo> findByDataGreaterThan(

@@ -1,10 +1,12 @@
 package com.luke.springblog.service;
 
 import com.luke.springblog.model.Artigo;
-import com.luke.springblog.model.ArtigoStatusCount;
-import com.luke.springblog.model.AutorTotalArtigo;
+import com.luke.springblog.dto.ArtigoStatusCount;
+import com.luke.springblog.model.Autor;
+import com.luke.springblog.dto.AutorTotalArtigo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,7 +18,21 @@ public interface ArtigoService {
 
     public Artigo obterPorCodigo(String codigo);
 
-    public Artigo criar(Artigo artigo);
+   /* public Artigo criar(Artigo artigo);*/
+
+    /*public ResponseEntity<?> criar(Artigo artigo);*/
+
+    public ResponseEntity<?> criarArtigoComAutor(Artigo artigo, Autor autor);
+
+
+
+
+
+
+
+    public ResponseEntity<?> atualizarArtigo(String id,Artigo artigo);
+
+
 
     public List<Artigo> findByDataGreaterThan(LocalDateTime localDateTime);
 

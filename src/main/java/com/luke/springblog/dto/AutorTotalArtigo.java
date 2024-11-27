@@ -1,5 +1,6 @@
-package com.luke.springblog.model;
+package com.luke.springblog.dto;
 
+import com.luke.springblog.model.Autor;
 import lombok.Data;
 
 @Data
